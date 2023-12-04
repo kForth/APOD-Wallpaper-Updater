@@ -1,0 +1,13 @@
+[tool.black]
+line-length = 90
+include = '''
+
+(
+    (
+        apod_wallpaper
+      | .github
+    ).*\.pyi?$
+)|(
+    setup\.py
+)
+'''
