@@ -117,8 +117,7 @@ def update_apod_wallpaper(
 
     img_file = download_img(img)
     try:
-        if not set_wallpaper(img_file):
-            return False
+        set_wallpaper(img_file)
     except (FileNotFoundError, NotImplementedError) as ex:
         if notify:
             send_notification(ex)
@@ -136,5 +135,4 @@ def update_apod_wallpaper(
                 ]
             )
         )
-
     return True
