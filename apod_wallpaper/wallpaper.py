@@ -1,4 +1,4 @@
-"""Set the desktop wallpaper."""
+"""Cross-platform module for setting the desktop wallpaper."""
 
 import os
 import subprocess
