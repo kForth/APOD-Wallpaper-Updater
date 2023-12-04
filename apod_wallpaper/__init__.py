@@ -49,7 +49,7 @@ class ApodImg:
 
 
 def get_apod_img(
-    api_key: str = API_KEY, date: datetime = datetime.today()
+    api_key: str = API_KEY, date: (datetime | None) = None
 ) -> ApodImg | None:
     """Get the URL for the latest APOD.
 
@@ -59,6 +59,8 @@ def get_apod_img(
     Returns:
         str: Image URL
     """
+    if date is None:
+        date = datetime.today()
     resp = urllib.request.urlopen(URL_PATH.format(api_key=api_key, date=date))
     if resp.status != 200:
         print(f"ERROR: Unable to load NASA APOD, {resp.status} {resp.reason}.")
@@ -83,12 +85,14 @@ def download_img(img: ApodImg) -> str:
     return img_file.name
 
 
-def update_apod_wallpaper(api_key: str = API_KEY, date: datetime = datetime.today()):
+def update_apod_wallpaper(api_key: str = API_KEY, date: (datetime | None) = None):
     """Set the desktop wallpaper to the specified APOD.
 
     Args:
         api_key (str): NASA OpenAPI Key
     """
+    if date is None:
+        date = datetime.today()
     img = get_apod_img(api_key, date)
     if img is None:
         return False
