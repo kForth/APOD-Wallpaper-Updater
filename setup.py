@@ -31,19 +31,21 @@ setup(
     description="Automaically update your desktop wallpaper, how ever often you want.",
     entry_points={
         "console_scripts": [
-            "apod_wallpaper=apod_wallpaper.cli:main",
+            "apod_wallpaper_updater=apod_wallpaper_updater.cli:main",
         ],
     },
     install_requires=requirements,
     license="MIT license",
     long_description=readme,
     include_package_data=True,
-    keywords="apod_wallpaper",
-    name="apod_wallpaper",
-    packages=find_packages(include=["apod_wallpaper", "apod_wallpaper.*"]),
+    keywords="apod_wallpaper_updater",
+    name="apod_wallpaper_updater",
+    packages=find_packages(
+        include=["apod_wallpaper_updater", "apod_wallpaper_updater.*"]
+    ),
     test_suite="tests",
     tests_require=test_requirements,
-    url="https://github.com/kforth/apod_wallpaper",
+    url="https://github.com/kforth/apod_wallpaper_updater",
     version="0.1.0",
     zip_safe=False,
 )

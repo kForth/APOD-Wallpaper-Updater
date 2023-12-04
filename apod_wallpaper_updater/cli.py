@@ -1,10 +1,10 @@
-"""Console script for apod_wallpaper."""
+"""Console script for apod_wallpaper_updater."""
 import sys
 from datetime import datetime
 
 import click
 
-from apod_wallpaper import API_KEY, DATE_FMT, update_apod_wallpaper
+from apod_wallpaper_updater import API_KEY, DATE_FMT, update_apod_wallpaper
 
 
 @click.command(

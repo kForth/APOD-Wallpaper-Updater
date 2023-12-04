@@ -4,7 +4,7 @@ include = '''
 
 (
     (
-        apod_wallpaper
+        apod_wallpaper_updater
       | .github
     ).*\.pyi?$
 )|(

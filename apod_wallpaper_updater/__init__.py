@@ -14,7 +14,7 @@ from tempfile import NamedTemporaryFile
 
 from notifypy import Notify
 
-from apod_wallpaper.wallpaper import set_wallpaper
+from apod_wallpaper_updater.wallpaper import set_wallpaper
 
 URL_PATH = "https://api.nasa.gov/planetary/apod?api_key={api_key}&date={date:%Y-%m-%d}"
 DATE_FMT = "%Y-%m-%d"
