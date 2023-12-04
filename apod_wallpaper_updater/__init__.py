@@ -25,21 +25,21 @@ API_KEY = "DEMO_KEY"
 class ApodImg:
     """A class to represent a NASA APOD image reposnse"""
 
-    copyright: str
+    copyright: str = ""
     """The name of the copyright holder"""
-    date: str
+    date: str = ""
     """The date of the APOD image"""
-    explanation: str
+    explanation: str = ""
     """The supplied text explanation of the image"""
-    hdurl: str
+    hdurl: str = ""
     """The URL the high-resolution image"""
-    media_type: str
+    media_type: str = ""
     """The type of media returned ('image' or 'video')"""
-    service_version: str
+    service_version: str = ""
     """The service version used"""
-    title: str
+    title: str = ""
     """The title of the image"""
-    url: str
+    url: str = ""
     """The URL the low-resolution image"""
 
     @property
