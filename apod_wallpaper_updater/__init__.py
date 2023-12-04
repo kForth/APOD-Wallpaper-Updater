@@ -17,7 +17,7 @@ from apod_wallpaper_updater.wallpaper import set_wallpaper
 
 URL_PATH = "https://api.nasa.gov/planetary/apod?api_key={api_key}&date={date:%Y-%m-%d}"
 DATE_FMT = "%Y-%m-%d"
-API_KEY = "DEMO_KEY"
+API_KEY = os.environ.get("NASA_OPENAPI_KEY", "DEMO_KEY")
 
 
 @dataclass
