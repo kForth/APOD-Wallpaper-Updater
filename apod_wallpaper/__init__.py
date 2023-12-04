@@ -6,10 +6,13 @@ __version__ = "0.1.0"
 
 import json
 import os
+import sys
 import urllib.request
 from dataclasses import dataclass
 from datetime import datetime
 from tempfile import NamedTemporaryFile
+
+from notifypy import Notify
 
 from apod_wallpaper.wallpaper import set_wallpaper
 
@@ -63,7 +66,9 @@ def get_apod_img(
         date = datetime.today()
     resp = urllib.request.urlopen(URL_PATH.format(api_key=api_key, date=date))
     if resp.status != 200:
-        print(f"ERROR: Unable to load NASA APOD, {resp.status} {resp.reason}.")
+        sys.stderr.write(
+            f"ERROR: Unable to load NASA APOD, {resp.status} {resp.reason}.\n"
+        )
         data = None
     else:
         data = ApodImg(**json.loads(resp.read().decode()))
@@ -85,11 +90,15 @@ def download_img(img: ApodImg) -> str:
     return img_file.name
 
 
-def update_apod_wallpaper(api_key: str = API_KEY, date: (datetime | None) = None):
+def update_apod_wallpaper(
+    api_key: str = API_KEY, date: (datetime | None) = None, notify: bool = True
+):
     """Set the desktop wallpaper to the specified APOD.
 
     Args:
         api_key (str): NASA OpenAPI Key
+        date (datetime): The specific date image to use (default: today)
+        notify (bool): If true, an OS notification will contain image information
     """
     if date is None:
         date = datetime.today()
@@ -98,6 +107,22 @@ def update_apod_wallpaper(api_key: str = API_KEY, date: (datetime | None) = None
         return False
 
     img_file = download_img(img)
-    set_wallpaper(img_file)
+    if not set_wallpaper(img_file):
+        return False
+
+    if notify:
+        notification = Notify()
+        notification.title = "NASA Astronomy Picture of the Day"
+        notification.message = "\n".join(
+            [
+                "Wallpaper Updated!",
+                img.title,
+                img.explanation,
+                f"Copyright (C) {img.copyright}",
+                img.date,
+            ]
+        )
+        notification.application_name = f"{__name__}.py"
+        notification.send(block=False)
 
     return True

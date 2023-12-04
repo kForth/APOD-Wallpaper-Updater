@@ -16,7 +16,7 @@ from apod_wallpaper import API_KEY, DATE_FMT, update_apod_wallpaper
     "api_key",
     default=API_KEY,
     show_default=True,
-    help="NASA OpenAPI Key. Get one at: https://api.nasa.gov/",
+    help="NASA OpenAPI Key. (See https://api.nasa.gov/)",
 )
 @click.option(
     "-d",
@@ -24,10 +24,18 @@ from apod_wallpaper import API_KEY, DATE_FMT, update_apod_wallpaper
     default=datetime.today().strftime(DATE_FMT),
     show_default=True,
     type=click.DateTime(formats=(DATE_FMT,)),
-    help="Specify a specific date to retrieve",
+    help="Specify a specific date to retrieve.",
 )
-def main(api_key: str, date: datetime):
-    update_apod_wallpaper(api_key, date)
+@click.option(
+    "-n",
+    "--notify",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help="Show a notification with information about the image.",
+)
+def main(api_key: str, date: datetime, notify: bool):
+    update_apod_wallpaper(api_key, date, notify)
     return 0
 
 
