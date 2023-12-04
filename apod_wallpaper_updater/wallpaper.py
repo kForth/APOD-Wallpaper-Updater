@@ -239,8 +239,9 @@ def set_wallpaper(file_loc: str, first_run: bool = True):
             args = ["fbsetbg", file_loc]
             subprocess.Popen(args)
         except Exception:
-            sys.stderr.write("ERROR: Failed to set wallpaper with fbsetbg!\n")
-            sys.stderr.write("Please make sre that You have fbsetbg installed.\n")
+            raise FileNotFoundError(
+                "Your environment requires fbsetbg, but it can't be found!"
+            )
     elif desktop_env == "icewm":
         # http://urukrama.wordpress.com/2007/12/05/desktop-backgrounds-in-window-managers/
         args = ["icewmbg", file_loc]
@@ -299,13 +300,9 @@ def set_wallpaper(file_loc: str, first_run: bool = True):
             """
             subprocess.Popen(["osascript", "-e", OSASCRIPT, "--", file_loc])
     else:
-        if first_run:  # don't spam the user with the same message over and over again
-            sys.stderr.write(
-                "ERROR: Failed to set wallpaper, your desktop is not supported."
-            )
-            sys.stderr.write(f"You can try manually to set your wallpaper to {file_loc}")
-        return False
-    return True
+        raise NotImplementedError(
+            "Failed to set wallpaper, your desktop is not supported."
+        )
 
 
 def get_config_dir(app_name: str) -> str:

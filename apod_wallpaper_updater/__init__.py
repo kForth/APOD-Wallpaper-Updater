@@ -6,7 +6,6 @@ __version__ = "0.1.0"
 
 import json
 import os
-import sys
 import urllib.request
 from dataclasses import dataclass
 from datetime import datetime
@@ -62,17 +61,13 @@ def get_apod_img(
     Returns:
         str: Image URL
     """
-    if date is None:
-        date = datetime.today()
-    resp = urllib.request.urlopen(URL_PATH.format(api_key=api_key, date=date))
+    resp = urllib.request.urlopen(
+        URL_PATH.format(api_key=api_key, date=date or datetime.today())
+    )
     if resp.status != 200:
-        sys.stderr.write(
-            f"ERROR: Unable to load NASA APOD, {resp.status} {resp.reason}.\n"
-        )
-        data = None
-    else:
-        data = ApodImg(**json.loads(resp.read().decode()))
-    return data
+        raise ConnectionError(f"Unable to load NASA APOD, {resp.status} {resp.reason}")
+
+    return ApodImg(**json.loads(resp.read().decode()))
 
 
 def download_img(img: ApodImg) -> str:
@@ -90,6 +85,19 @@ def download_img(img: ApodImg) -> str:
     return img_file.name
 
 
+def send_notification(message: str) -> None:
+    """Send an OS notification with preconfigured settings and a specified message.
+
+    Args:
+        message (str): The notification message.
+    """
+    notification = Notify()
+    notification.title = "NASA Astronomy Picture of the Day"
+    notification.message = message
+    notification.application_name = f"{__name__}.py"
+    notification.send(block=False)
+
+
 def update_apod_wallpaper(
     api_key: str = API_KEY, date: (datetime | None) = None, notify: bool = True
 ):
@@ -100,29 +108,33 @@ def update_apod_wallpaper(
         date (datetime): The specific date image to use (default: today)
         notify (bool): If true, an OS notification will contain image information
     """
-    if date is None:
-        date = datetime.today()
-    img = get_apod_img(api_key, date)
-    if img is None:
+    try:
+        img = get_apod_img(api_key, date)
+    except urllib.error.HTTPError as ex:
+        if notify:
+            send_notification(ex)
         return False
 
     img_file = download_img(img)
-    if not set_wallpaper(img_file):
+    try:
+        if not set_wallpaper(img_file):
+            return False
+    except (FileNotFoundError, NotImplementedError) as ex:
+        if notify:
+            send_notification(ex)
         return False
 
     if notify:
-        notification = Notify()
-        notification.title = "NASA Astronomy Picture of the Day"
-        notification.message = "\n".join(
-            [
-                "Wallpaper Updated!",
-                img.title,
-                img.explanation,
-                f"Copyright (C) {img.copyright}",
-                img.date,
-            ]
+        send_notification(
+            "\n".join(
+                [
+                    "Wallpaper Updated!",
+                    img.title,
+                    img.explanation,
+                    f"Copyright (C) {img.copyright}",
+                    img.date,
+                ]
+            )
         )
-        notification.application_name = f"{__name__}.py"
-        notification.send(block=False)
 
     return True
