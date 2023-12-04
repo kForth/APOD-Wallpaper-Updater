@@ -19,7 +19,7 @@ repos:
             args: ["--py310-plus"]
             exclude: "setup.py"
     - repo: https://github.com/pre-commit/mirrors-isort
-      rev: ""
+      rev: v5.10.1
       hooks:
           - id: isort
     - repo: https://github.com/psf/black
