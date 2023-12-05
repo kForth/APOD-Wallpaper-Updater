@@ -24,7 +24,7 @@ from apod_wallpaper_updater import API_KEY, DATE_FMT, update_apod_wallpaper
     default=datetime.today().strftime(DATE_FMT),
     show_default=True,
     type=click.DateTime(formats=(DATE_FMT,)),
-    help="Specify a specific date to retrieve.",
+    help="Specify a date to retrieve.",
 )
 @click.option(
     "-n",
