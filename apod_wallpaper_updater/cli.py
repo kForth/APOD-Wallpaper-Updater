@@ -34,9 +34,21 @@ from apod_wallpaper_updater import API_KEY, DATE_FMT, update_apod_wallpaper
     show_default=True,
     help="Show a notification with information about the image.",
 )
-def main(api_key: str, date: datetime, notify: bool):
-    update_apod_wallpaper(api_key, date, notify)
-    return 0
+def main(api_key: str = API_KEY, date: datetime = None, notify: bool = False) -> int:
+    """Update the desktop wallpaper to the current NASA Astronomy Picture of the Day.
+
+    Args:
+        api_key (str): A NASA OpenAPI Key, if not provided the 'NASA_OPENAPI_KEY' env var
+                       will be used if it exists, otherwise 'DEMO_KEY' will be used
+        date (datetime): The date to use, today's date will be used if not provided
+        notify (bool): If true, a system notification will show info about the image
+
+    Returns:
+        int: Returns 0 if wallpaper was changed, 1 if not
+    """
+    if update_apod_wallpaper(api_key, date, notify):
+        return 0
+    return 1
 
 
 if __name__ == "__main__":
